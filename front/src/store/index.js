@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import sample from './sample/sample';
-
-console.log(sample);
+import sample from './sample';
 
 Vue.use(Vuex);
 
