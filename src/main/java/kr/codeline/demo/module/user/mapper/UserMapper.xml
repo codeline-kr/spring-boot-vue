@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.codeline.demo.module.user.mapper.UserMapper">
+    <select id="managerLogin" resultType="casemap">
+        SELECT
+            GRJ_SEQ, USER_ID, USER_PW, SMYEONG,
+            GRJ_POSI, GRJ_TEL, GRJ_EMAIL,
+            SJ_WSITEJSGNYEOBU, SJ_SMGJGRGNYEOBU, SJ_DHGJGRGNYEOBU, SJ_SGSESSGNYEOBU, SJ_PGWWGRGNYEOBU
+        FROM TB_GT_GRJ
+        WHERE 
+            USER_ID = #{value}
+            AND SYYEOBU = 'Y'
+    </select>
+
+    <update id="updateManagerAccessTime">
+        UPDATE TB_GT_GRJ SET
+            CJJSILSI = DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+        WHERE 
+            GRJ_SEQ = #{value}
+    </update>
+
+    <select id="univLogin" resultType="casemap">
+        SELECT  
+            T1.PGDS_SEQ, T1.PGDSMYEONG, NULL AS GGJ_SEQ, 
+            T1.USER_ID, T1.USER_PW, 
+            T1.PGDSMYEONG AS USER_NAME, 
+            T1.JHBEONHO, 
+            T1.EMAIL, 
+            T1.BMBH_JSJ_YEOBU, 
+            NULL AS POSI,
+            'Y' AS MAST_USER_YN
+        FROM TB_PGDS T1
+        WHERE T1.USER_ID = #{value}
+            AND T1.SSTJS_GN_YEOBU = 'Y'
+        UNION
+        SELECT  
+            T1.PGDS_SEQ, T2.PGDSMYEONG, T1.GGJ_SEQ, 
+            T1.GGJ_EMAIL AS USER_ID, T1.USER_PW, 
+            T1.GGJ_NAME AS USER_NAME, 
+            T1.GGJ_TEL AS JHBEONHO, 
+            T1.GGJ_EMAIL AS EMAIL, 
+            T1.BMBH_JSJ_YEOBU, 
+            T1.GGJ_POSI AS POSI,
+            'N' AS MAST_USER_YN
+        FROM TB_PGDS_GGJ T1
+        INNER JOIN TB_PGDS T2 ON T2.PGDS_SEQ = T1.PGDS_SEQ
+        WHERE T1.GGJ_EMAIL = #{value}
+            AND T1.SJ_WSITEJSGNYEOBU = 'Y'
+    </select>
+
+    <update id="resetUnivPassword">
+        UPDATE TB_PGDS
+        SET   USER_PW = #{user_pw}
+            , BMBH_JSJ_YEOBU = 'N'
+            , MOD_DTTM = DATE_FORMAT(now(), '%Y%m%d%H%i%s')
+        WHERE PGDS_SEQ = #{pgds_seq}
+          AND SSTJS_GN_YEOBU = 'Y'
+    </update>
+</mapper>

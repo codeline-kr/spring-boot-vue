@@ -1,0 +1,83 @@
+# 디폴트 프로파일
+spring:
+    application:
+        name: demo
+    profiles:
+        active: local
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        url: jdbc:mariadb://xxx:33306/db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+        username: user
+        password: password
+        hikari:
+            pool-name: hikari-cp
+            maximum-pool-size: 1
+            max-lifetime: 28000
+            data-source-properties:
+                cachePrepStmts: true
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
+                useServerPrepStmts: true
+    devtools:
+        livereload:
+            enabled: true
+    session:
+        store-type: jdbc
+    servlet:
+        multipart:
+            max-file-size: 9216MB
+            max-request-size: 9216MB
+    cache:
+        jcache:
+            config: classpath:ehcache.xml
+    task:
+        execution:
+            pool:
+                core-size: 8
+                max-size: 8
+
+mybatis:
+    config-location: classpath:mybatis.xml
+
+logging:
+    level:
+        ROOT: INFO
+        jdbc.sqlonly: DEBUG
+        jdbc.sqltiming: ERROR
+        jdbc.audit: ERROR
+        jdbc.resultset: ERROR
+        jdbc.resultsettable: ERROR
+        jdbc.connection: ERROR
+        org.springframeword.web: TRACE
+        com.codeline: DEBUG
+
+server:
+    servlet:
+        session:
+            timeout: 12h
+
+props:
+    jwt.secret: ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$ibssecret1234!@#$
+    base.url: http://127.0.0.1:8080
+    upload.path: d:\\files\\demo
+
+---
+# 운영 프로파일
+
+spring:
+    profiles: prod
+    datasource:
+        url:
+        username:
+        password:
+        hikari:
+            maximum-pool-size: 10
+    devtools:
+        livereload:
+            enabled: false
+        add-properties: false
+
+logging:
+    level:
+        ROOT: WARN
+        org.springframeword.web: WARN
